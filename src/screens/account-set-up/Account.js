@@ -76,8 +76,44 @@ const Account = () => {
     setErrors({ ...errors, [name]: error });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:5000/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userRegistration),
+      });
+            // console.log(response)
+            if (response.ok && response.status===201) {
+              navigate("/login"); 
+              // Handle successful insertion (e.g., show a success message)
+    
+              console.log('Data inserted successfully!');
+            } else {
+              // Handle insertion failure
+              console.error('Failed to insert data.');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+    
+        // console.log(records);
+        const newRecord = {
+          ...userRegistration,
+          id: new Date().getTime().toString(),
+        };
+        
+    
+        setUserRegistration({
+          username: "",
+          password: "",
+          confirmPassword: "",
+    
+        });
 
     // Validate the form before submitting
     if (validateForm()) {

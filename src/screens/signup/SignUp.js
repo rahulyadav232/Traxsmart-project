@@ -8,7 +8,7 @@ const SignUp = () => {
   const [userRegistration, setUserRegistration] = useState({
     fullname: "",
     email: "",
-    dob: "",
+    dateOfBirth: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -31,8 +31,8 @@ const SignUp = () => {
     }
 
     // Validate date format (you may need a more sophisticated date validation)
-    if (!userRegistration.dob) {
-      newErrors.dob = "Date of Birth is required";
+    if (!userRegistration.dateOfBirth) {
+      newErrors.dateOfBirth = "Date of Birth is required";
       valid = false;
     }
 
@@ -55,7 +55,7 @@ const validateEmail = (value) => {
   return "";
 };
 
-const validateDOB = (value) => {
+const validatedateOfBirth = (value) => {
   if (!value) {
     return "Date of Birth is required";
   }
@@ -75,8 +75,8 @@ const handleInput = (e) => {
     case "email":
       error = validateEmail(value);
       break;
-    case "dob":
-      error = validateDOB(value);
+    case "dateOfBirth":
+      error = validatedateOfBirth(value);
       break;
     default:
       break;
@@ -87,8 +87,45 @@ const handleInput = (e) => {
 };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+
+    try {
+        const response = await fetch('http://localhost:5000/users/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userRegistration),
+        });
+              // console.log(response)
+              if (response.ok && response.status===201) {
+                navigate("/login"); 
+                // Handle successful insertion (e.g., show a success message)
+      
+                console.log('Data inserted successfully!');
+              } else {
+                // Handle insertion failure
+                console.error('Failed to insert data.');
+              }
+            } catch (error) {
+              console.error('Error:', error);
+            }
+      
+          // console.log(records);
+          const newRecord = {
+            ...userRegistration,
+            id: new Date().getTime().toString(),
+          };
+          
+      
+          setUserRegistration({
+            fullname: "",
+            email: "",
+            dateOfBirth : "",
+      
+          });
+  
 
     // Validate the form before submitting
     if (validateForm()) {
@@ -135,14 +172,14 @@ const handleInput = (e) => {
         </div>
 
         <div className="inputGroup3">
-          <label htmlFor="dob">Date Of Birth</label>
+          <label htmlFor="dateOfBirth">Date Of Birth</label>
           <input
             type="date"
-            placeholder="Enter Your DOB"
-            value={userRegistration.dob}
+            placeholder="Enter Your dateOfBirth"
+            value={userRegistration.dateOfBirth}
             onChange={handleInput}
-            name="dob"
-            id="dob"
+            name="dateOfBirth"
+            id="dateOfBirth"
           />
         </div>
 
